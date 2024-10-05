@@ -1,0 +1,138 @@
+# pragma version ~=0.4.0
+"""
+@title `BOBC` Overcollateralized BOB stablecoin interface
+@author rabuawad
+"""
+
+# Events
+
+event OwnershipTransferred:
+    previous_owner: address
+    new_owner: address
+
+event RoleMinterChanged:
+    minter: address
+    status: bool
+
+event Transfer:
+    sender: address
+    receiver: address
+    value: uint256
+
+event Approval:
+    owner: address
+    spender: address
+    value: uint256
+
+# Functions
+
+@view
+@external
+def owner() -> address:
+    ...
+
+@view
+@external
+def eip712Domain() -> (bytes1, String[50], String[20], uint256, address, bytes32, DynArray[uint256, 32]):
+    ...
+
+@external
+def transfer(to: address, amount: uint256) -> bool:
+    ...
+
+@external
+def approve(spender: address, amount: uint256) -> bool:
+    ...
+
+@external
+def transferFrom(owner: address, to: address, amount: uint256) -> bool:
+    ...
+
+@external
+def burn(amount: uint256):
+    ...
+
+@external
+def burn_from(owner: address, amount: uint256):
+    ...
+
+@external
+def mint(owner: address, amount: uint256):
+    ...
+
+@external
+def set_minter(minter: address, status: bool):
+    ...
+
+@external
+def permit(owner: address, spender: address, amount: uint256, deadline: uint256, v: uint8, r: bytes32, s: bytes32):
+    ...
+
+@view
+@external
+def DOMAIN_SEPARATOR() -> bytes32:
+    ...
+
+@external
+def transfer_ownership(new_owner: address):
+    ...
+
+@external
+def renounce_ownership():
+    ...
+
+@view
+@external
+def name() -> String[25]:
+    ...
+
+@view
+@external
+def symbol() -> String[5]:
+    ...
+
+@view
+@external
+def decimals() -> uint8:
+    ...
+
+@view
+@external
+def balanceOf(arg0: address) -> uint256:
+    ...
+
+@view
+@external
+def allowance(arg0: address, arg1: address) -> uint256:
+    ...
+
+@view
+@external
+def totalSupply() -> uint256:
+    ...
+
+@view
+@external
+def is_minter(arg0: address) -> bool:
+    ...
+
+@view
+@external
+def nonces(arg0: address) -> uint256:
+    ...
+
+@external
+def burnFrom(owner: address, amount: uint256):
+    ...
+
+@view
+@external
+def isMintableOrBurnable() -> bool:
+    ...
+
+@view
+@external
+def initialSupply() -> uint256:
+    ...
+
+

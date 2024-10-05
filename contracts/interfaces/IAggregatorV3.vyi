@@ -1,0 +1,68 @@
+# pragma version ~=0.4.0
+"""
+@title Aggregator V3 Interface
+@dev Interface for interacting with Chainlink's AggregatorV3,
+     used for fetching price feed data.
+@author chainlink
+"""
+
+
+@external
+@view
+def decimals() -> uint8:
+    """
+    @dev Returns the number of decimals used in the price data returned by the feed.
+    @return The number of decimals (e.g., 8 means the price is scaled by 10^8).
+    """
+    ...
+
+
+@external
+@view
+def description() -> String[1024]:
+    """
+    @dev Returns a description of the data feed, usually including the pair (e.g., "BNB/USD").
+    @return A string description of the price feed.
+    """
+    ...
+
+
+@external
+@view
+def version() -> uint256:
+    """
+    @dev Returns the version number of the aggregator contract.
+    @return The version of the aggregator contract.
+    """
+    ...
+
+
+@external
+@view
+def getRoundData(_roundId: uint80) -> (uint80, int256, uint256, uint256, uint80):
+    """
+    @dev Returns historical price data for a specific round identified by the round ID.
+    @param _roundId The ID of the round to retrieve data for.
+    @return A tuple containing:
+        - roundId: The ID of the round.
+        - answer: The price data (int256) for the round.
+        - startedAt: The timestamp when the round started.
+        - updatedAt: The timestamp when the price was last updated.
+        - answeredInRound: The round ID of the round in which the answer was computed.
+    """
+    ...
+
+
+@external
+@view
+def latestRoundData() -> (uint80, int256, uint256, uint256, uint80):
+    """
+    @dev Returns the latest price data available from the feed.
+    @return A tuple containing:
+        - roundId: The ID of the current round.
+        - answer: The latest price data (int256).
+        - startedAt: The timestamp when the round started.
+        - updatedAt: The timestamp when the price was last updated.
+        - answeredInRound: The round ID of the round in which the answer was computed.
+    """
+    ...
