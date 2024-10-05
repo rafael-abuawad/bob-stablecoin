@@ -100,7 +100,7 @@ collateralDeposited: public(HashMap[address, uint256])
 
 
 # @dev Mapping of the amount of BOBC minted by each user.
-BOBCMinted: public(HashMap[address, uint256])
+bobcMinted: public(HashMap[address, uint256])
 
 
 # @dev Emitted when collateral is deposited by a user.
@@ -194,3 +194,18 @@ def get_token_amount_from_bob(amount: uint256) -> uint256:
     """
     price: int256 = self._get_price_from_oracle()
     return (amount * PRECISION) // (convert(price, uint256) * ADDITIONAL_FEED_PRECISION)
+
+
+@external
+@nonreentrant
+def deposit_collateral(amount: uint256):
+    """
+    @param amount The amount of collateral to deposit.
+    @dev Deposits the specified collateral for the caller.
+    """
+    assert amount > 0, "engine: amount must be greater than zero"
+    self.collateralDeposited[msg.sender] += amount
+    log CollateralDeposited(msg.sender, amount)
+
+    success: bool = extcall _ASSET.transferFrom(msg.sender, self, amount)
+    assert success, "engine: transferFrom failed"
