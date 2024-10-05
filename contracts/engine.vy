@@ -6,8 +6,13 @@
 @author rabuawad
 """
 
-# @dev We import  the `IERC20` interface
+# @dev We import and implement the `IERC20` interface,
+from ethereum.ercs import IERC20
+
+
+# @dev We import  the `IBOBC` interface
 from .interfaces import IBOBC
+
 
 # @dev We import the `AggregatorV3` interface.
 from .interfaces import IAggregatorV3
@@ -20,7 +25,17 @@ asset: public(immutable(address))
 
 # @dev Stores the ERC-20 interface object of the underlying
 # token used for the protocol
-_ASSET: immutable(IBOBC)
+_ASSET: immutable(IERC20)
+
+
+# @dev Returns the address of the underlying custom token
+# used for the protocl.
+stablecoin: public(immutable(address))
+
+
+# @dev Stores the IBOBC interface object of the underlying
+# custom token used for the protocol
+_STABLECOIN: immutable(IBOBC)
 
 
 # @dev Returns the address of the underlying oracle
@@ -73,6 +88,12 @@ ADDITIONAL_FEED_PRECISION: constant(uint256) = 10**10
 FEED_PRECISION: constant(uint256) = 10**8
 
 
+# @dev Conversion rate between 1 USD and 1 BOB.
+# @notice This constant represents the fixed conversion rate,
+# where 1 USD is equivalent to 7 BOB.
+CONVERSION_RATE: constant(int256) = 7
+
+
 # @dev Mapping of the amount of collateral deposited
 # by users
 collateralDeposited: public(HashMap[address, uint256])
@@ -108,7 +129,7 @@ exports: ow.__interface__
 
 @deploy
 @payable
-def __init__(asset_: IBOBC, oracle_: IAggregatorV3):
+def __init__(stablecoin_: IBOBC, asset_: IERC20, oracle_: IAggregatorV3):
     """
     @dev To omit the opcodes for checking the `msg.value`
          in the creation-time EVM bytecode, the constructor
@@ -119,6 +140,9 @@ def __init__(asset_: IBOBC, oracle_: IAggregatorV3):
     @notice The `owner` role will be assigned to
             the `msg.sender`.
     """
+    _STABLECOIN = stablecoin_
+    stablecoin = _STABLECOIN.address
+
     _ASSET = asset_
     asset = _ASSET.address
 
@@ -128,3 +152,45 @@ def __init__(asset_: IBOBC, oracle_: IAggregatorV3):
     # The following line assigns the `owner`
     # to the `msg.sender`.
     ow.__init__()
+
+
+@internal
+@view
+def _get_price_from_oracle() -> int256:
+    roundId: uint80 = 0
+    answer: int256 = 0
+    startedAt: uint256 = 0
+    updatedAt: uint256 = 0
+    answeredInRound: uint80 = 0
+    (roundId, answer, startedAt, updatedAt, answeredInRound) = staticcall _ORACLE.latestRoundData()
+
+    assert updatedAt != 0 and answeredInRound >= roundId, "engine: stale oracle price"
+    assert TIMEOUT > (block.timestamp - updatedAt), "engine: stale oracle price"
+    answer *= CONVERSION_RATE
+
+    return answer
+
+
+@internal
+@view
+def _get_bob_value(amount: uint256) -> uint256:
+    price: int256 = self._get_price_from_oracle()
+    return ((convert(price, uint256) * ADDITIONAL_FEED_PRECISION) * amount) // PRECISION
+
+
+@external
+@view
+def get_bob_value(amount: uint256) -> uint256:
+    return self._get_bob_value(amount)
+
+
+@external
+@view
+def get_token_amount_from_bob(amount: uint256) -> uint256:
+    """
+    @dev Converts a BOB amount (in Wei) to the equivalent token amount.
+    Uses Chainlink price feed to fetch the token price in BOB at the current
+    conversion rate.
+    """
+    price: int256 = self._get_price_from_oracle()
+    return (amount * PRECISION) // (convert(price, uint256) * ADDITIONAL_FEED_PRECISION)
