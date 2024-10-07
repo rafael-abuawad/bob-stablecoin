@@ -196,9 +196,68 @@ def get_token_amount_from_bob(amount: uint256) -> uint256:
     return (amount * PRECISION) // (convert(price, uint256) * ADDITIONAL_FEED_PRECISION)
 
 
+@internal
+@view
+def _get_account_collateral_value(user: address) -> uint256:
+    amount: uint256 = self.collateralDeposited[user]
+    totalCollateral: uint256 = self._get_bob_value(amount)
+    return totalCollateral
+
+
 @external
-@nonreentrant
-def deposit_collateral(amount: uint256):
+@view
+def get_account_collateral_value(user: address) -> uint256:
+    return self._get_account_collateral_value(user)
+
+
+@internal
+@view
+def _get_account_information(user: address) -> (uint256, uint256):
+    minted: uint256 = self.bobcMinted[user]
+    collateral: uint256 = self._get_account_collateral_value(user)
+    return minted, collateral
+
+
+@external
+@view
+def get_account_information(user: address) -> (uint256, uint256):
+    return self._get_account_information(user)
+
+
+@internal
+@pure
+def _calculate_health_factor(minted: uint256, collateral: uint256) -> uint256:
+    if minted == 0:
+        return max_value(uint256)
+    
+    collateralAdjustedForThreshold: uint256 = (collateral * LIQUIDATION_THRESHOLD) // LIQUIDATION_PRECISION
+    return (collateralAdjustedForThreshold * PRECISION) // minted
+
+
+@internal
+@view
+def _health_factor(user: address) -> uint256:
+    minted: uint256 = 0
+    collateral: uint256 = 0
+    minted, collateral = self._get_account_information(user)
+    return self._calculate_health_factor(minted, collateral)
+
+
+@external
+@view
+def health_factor(user: address) -> uint256:
+    return self._health_factor(user)
+
+
+@internal
+@view
+def _revert_if_health_factor_is_broken(user: address):
+    userHealthFactor: uint256 = self._health_factor(user)
+    assert userHealthFactor >= MIN_HEALTH_FACTOR, "engine: breaks health factor"
+
+
+@internal
+def _deposit_collateral(amount: uint256):
     """
     @param amount The amount of collateral to deposit.
     @dev Deposits the specified collateral for the caller.
@@ -209,3 +268,44 @@ def deposit_collateral(amount: uint256):
 
     success: bool = extcall _ASSET.transferFrom(msg.sender, self, amount)
     assert success, "engine: transferFrom failed"
+
+
+@external
+@nonreentrant
+def deposit_collateral(amount: uint256):
+    self._deposit_collateral(amount)
+
+
+@internal
+def _mint_bobc(amount: uint256):
+    """
+    @param amount The amount of BOBC to mint.
+    @dev Mints BOBC for the caller if they have sufficient collateral.
+    """
+    assert amount > 0, "engine: amount must be greater than zero"
+
+    self.bobcMinted[msg.sender] += amount
+    self._revert_if_health_factor_is_broken(msg.sender)
+
+    extcall _STABLECOIN.mint(msg.sender, amount)
+
+    
+@external
+@nonreentrant
+def mint_bobc(amount: uint256):
+    self._mint_bobc(amount)
+
+
+@external
+@nonreentrant
+def deposit_collateral_and_mint_bobc(
+    collateral: uint256, 
+    amountToMint: uint256
+):
+    """
+    @param collateral The amount of collateral to deposit.
+    @param amountToMint The amount of BOBC to mint.
+    @notice Deposits collateral and mints BOBC in one transaction.
+    """
+    self._deposit_collateral(collateral)
+    self._mint_bobc(amountToMint)

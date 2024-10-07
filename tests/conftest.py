@@ -19,10 +19,12 @@ def oracle():
 
 
 @pytest.fixture(scope="module")
-def bobc(project, owner):
+def stablecoin(project, owner):
     return project.bobc.deploy(sender=owner)
 
 
 @pytest.fixture(scope="module")
-def engine(project, bobc, asset, oracle, owner):
-    return project.engine.deploy(bobc, asset, oracle, sender=owner)
+def engine(project, stablecoin, asset, oracle, owner):
+    engine = project.engine.deploy(stablecoin, asset, oracle, sender=owner)
+    stablecoin.set_minter(engine, True, sender=owner)
+    return engine
