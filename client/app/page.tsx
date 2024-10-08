@@ -6,14 +6,31 @@ import Footer from "@/components/footer";
 import HealthFactor from "@/components/health-factor";
 import NavTabs from "@/components/nav-tabs";
 import Navbar from "@/components/navbar";
+import NoWallet from "@/components/no-wallet";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useAccount } from "wagmi";
 
 export default function Home() {
+  const { isConnected } = useAccount();
+  if (!isConnected) {
+    return (
+      <>
+        <AnnouncementBanner />
+        <Navbar />
+        <main className="max-w-[85rem] px-4 py-4 sm:px-6 lg:px-8 mx-auto">
+          <div className="w-full grid gap-4 grid-cols-1 max-w-7xl">
+            <NoWallet />
+          </div>
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
       <AnnouncementBanner />

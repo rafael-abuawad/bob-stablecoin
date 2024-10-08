@@ -21,7 +21,9 @@ export default function Footer() {
             <p className="text-gray-500 dark:text-neutral-500">
               Built by{" "}
               <Button variant="link" asChild className="px-0">
-                <Link href={""}>Rafael Abuawad</Link>
+                <Link href="https://x.com/rabuawad_" target="_blank">
+                  Rafael Abuawad
+                </Link>
               </Button>
             </p>
             <p className="text-gray-500 dark:text-neutral-500">© 2024.</p>
