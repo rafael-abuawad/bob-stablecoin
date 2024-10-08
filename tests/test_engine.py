@@ -41,8 +41,8 @@ def test_deposit_collateral(accounts, asset, engine):
 def test_deposit_collateral_and_mint_bobc(accounts, asset, stablecoin, engine):
     amount = int(1.5e18)
     collateral = engine.get_bob_value(amount)
-    accesible_collateral = int(collateral * 0.45) # 45% collateral minted
-    breaks_health_factor = int(collateral * 0.06) # 51% collateral minted (breaks)
+    accesible_collateral = int(collateral * 0.45)  # 45% collateral minted
+    breaks_health_factor = int(collateral * 0.06)  # 51% collateral minted (breaks)
 
     for account in accounts:
         asset.deposit(sender=account, value=amount)
@@ -61,3 +61,30 @@ def test_deposit_collateral_and_mint_bobc(accounts, asset, stablecoin, engine):
 
         with ape.reverts():
             engine.mint_bobc(breaks_health_factor, sender=account)
+
+
+def test_remove_collateral(accounts, asset, stablecoin, engine):
+    amount = int(1.5e18)
+    collateral = engine.get_bob_value(amount)
+    accesible_collateral = int(collateral * 0.45)  # 45% collateral minted
+
+    for account in accounts:
+        asset.deposit(sender=account, value=amount)
+        asset.approve(engine, amount, sender=account)
+        initial_balance = asset.balanceOf(account)
+        initial_engine_balance = asset.balanceOf(engine)
+
+        engine.deposit_collateral(amount, sender=account)
+        engine_balance = asset.balanceOf(engine)
+        assert engine_balance == int(initial_engine_balance + amount)
+
+        assert stablecoin.balanceOf(account) == 0
+        engine.redeem_collateral(amount, sender=account)
+        assert stablecoin.balanceOf(account) == 0
+
+        initial_balance = asset.balanceOf(account)
+        new_initial_balance = asset.balanceOf(account)
+        assert new_initial_balance == initial_balance
+
+        with ape.reverts():
+            engine.mint_bobc(accesible_collateral, sender=account)

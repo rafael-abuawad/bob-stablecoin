@@ -309,3 +309,38 @@ def deposit_collateral_and_mint_bobc(
     """
     self._deposit_collateral(collateral)
     self._mint_bobc(amountToMint)
+
+
+@internal
+def _redeem_collateral(amount: uint256, from_: address, to: address):
+    self.collateralDeposited[from_] -= amount
+    log CollateralRedeemed(from_, to, amount)
+    
+    success: bool = extcall _ASSET.transfer(to, amount)
+    assert success, "engine: tranfers failed"
+
+
+@internal
+def _burn_bobc(amountToBurn: uint256, onBehalfOf: address, bobcFrom: address):
+    self.bobcMinted[onBehalfOf] -= amountToBurn
+    
+    success: bool = extcall _STABLECOIN.transferFrom(bobcFrom, self, amountToBurn)
+    assert success, "engine: tranfers failed"
+    
+    extcall _STABLECOIN.burn(amountToBurn)
+
+
+@external
+@nonreentrant
+def redeem_collateral(amountCollateral: uint256):
+    assert amountCollateral > 0, "engine: amount must be more than zero"
+    self._redeem_collateral(amountCollateral, msg.sender, msg.sender)
+    self._revert_if_health_factor_is_broken(msg.sender)
+
+
+@external
+def burn_bobc(amount: uint256):
+    assert amount > 0, "Amount must be more than zero" 
+    
+    self._burn_bobc(amount, msg.sender, msg.sender)
+    self._revert_if_health_factor_is_broken(msg.sender)
