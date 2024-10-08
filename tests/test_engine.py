@@ -2,6 +2,7 @@ import ape
 
 
 def test_initial_setup(engine, asset, oracle, stablecoin):
+    # Check the contract instances from the fixture
     assert asset == engine.asset()
     assert oracle == engine.oracle()
     assert stablecoin.address == engine.stablecoin()
@@ -63,6 +64,31 @@ def test_deposit_collateral_and_mint_bobc(accounts, asset, stablecoin, engine):
             engine.mint_bobc(breaks_health_factor, sender=account)
 
 
+def test_collateral_deposit_and_mint(accounts, asset, stablecoin, engine):
+    amount_to_deposit = int(1e18)  # Deposit 1 ether worth of collateral
+    amount_to_mint = int(10e18)  # Mint 10 stablecoin
+
+    for account in accounts:
+        # Check asset initial balance in engine
+        initial_balance = asset.balanceOf(engine)
+
+        # Deposit collateral
+        asset.deposit(sender=account, value=amount_to_deposit)
+        asset.approve(engine, amount_to_deposit, sender=account)
+        engine.deposit_collateral(amount_to_deposit, sender=account)
+
+        # Check asset balance in engine
+        assert asset.balanceOf(engine) == initial_balance + amount_to_deposit
+
+        # Mint stablecoins against the collateral
+        engine.mint_bobc(amount_to_mint, sender=account)
+        assert stablecoin.balanceOf(account) == amount_to_mint
+
+        # Check that the health factor is above the liquidation threshold
+        health_factor = engine.health_factor(account)
+        assert health_factor >= 1
+
+
 def test_remove_collateral(accounts, asset, stablecoin, engine):
     amount = int(1.5e18)
     collateral = engine.get_bob_value(amount)
@@ -88,3 +114,10 @@ def test_remove_collateral(accounts, asset, stablecoin, engine):
 
         with ape.reverts():
             engine.mint_bobc(accesible_collateral, sender=account)
+
+
+def test_liquidation(accounts, engine):
+    collateral_to_cover = int(20e18)  # Cover 20 ether worth of collateral
+    for account in accounts:
+        with ape.reverts():
+            engine.liquidate(account, collateral_to_cover, sender=account)

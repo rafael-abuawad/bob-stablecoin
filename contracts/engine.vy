@@ -184,9 +184,9 @@ def get_bob_value(amount: uint256) -> uint256:
     return self._get_bob_value(amount)
 
 
-@external
+@internal
 @view
-def get_token_amount_from_bob(amount: uint256) -> uint256:
+def _get_token_amount_from_bob(amount: uint256) -> uint256:
     """
     @dev Converts a BOB amount (in Wei) to the equivalent token amount.
     Uses Chainlink price feed to fetch the token price in BOB at the current
@@ -196,6 +196,12 @@ def get_token_amount_from_bob(amount: uint256) -> uint256:
     return (amount * PRECISION) // (convert(price, uint256) * ADDITIONAL_FEED_PRECISION)
 
 
+@external
+@view
+def get_token_amount_from_bob(amount: uint256) -> uint256:
+    return self._get_token_amount_from_bob(amount)
+
+    
 @internal
 @view
 def _get_account_collateral_value(user: address) -> uint256:
@@ -343,4 +349,35 @@ def burn_bobc(amount: uint256):
     assert amount > 0, "Amount must be more than zero" 
     
     self._burn_bobc(amount, msg.sender, msg.sender)
+    self._revert_if_health_factor_is_broken(msg.sender)
+
+
+@external
+@nonreentrant
+def liquidate(user: address, debtToCover: uint256):
+    """
+    @dev Liquidate an insolvent user by burning BOBC and redeeming their collateral.
+    @param user The user who is insolvent and has a health factor below the minimum.
+    @param debtToCover The amount of BOBC to burn to cover the user's debt.
+    @notice 
+    Notes:
+        - The liquidator receives a 10% bonus in collateral for helping liquidate.
+        - The liquidation assumes the protocol is 150% overcollateralized.
+        - Partial liquidation is allowed.
+        - Known limitation: If the protocol is only 100% collateralized, liquidation may not work.
+    """
+    assert debtToCover > 0, "engine: amount must be more than zero" 
+
+    startingUserHealthFactor: uint256 = self._health_factor(user)
+    assert startingUserHealthFactor < MIN_HEALTH_FACTOR, "engine: health factor is ok"
+
+    tokenAmountFromDebtCovered: uint256 = self._get_token_amount_from_bob(debtToCover)
+    bonusCollateral: uint256 = (tokenAmountFromDebtCovered * LIQUIDATION_BONUS) // LIQUIDATION_PRECISION
+
+    self._redeem_collateral(tokenAmountFromDebtCovered + bonusCollateral, user, msg.sender)
+    self._burn_bobc(debtToCover, user, msg.sender)
+
+    endingUserHealthFactor: uint256 = self._health_factor(user)
+    assert endingUserHealthFactor > startingUserHealthFactor, "engine: health factor not improved"
+
     self._revert_if_health_factor_is_broken(msg.sender)
