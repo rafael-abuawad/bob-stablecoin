@@ -24,10 +24,10 @@ const FormSchema = z.object({
   amount: z.number(),
 });
 
-export function MintForm({ address }: { address: `0x${string}` }) {
+export default function MintForm({ address }: { address: `0x${string}` }) {
   const { data: available } = useReadContract({
     ...engineContractConfig,
-    functionName: "get_bobc_avialable",
+    functionName: "get_bobc_available",
     args: [address],
   });
 

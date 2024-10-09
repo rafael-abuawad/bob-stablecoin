@@ -5,25 +5,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Icons from "../icons";
-import { DepositForm } from "../forms/deposit-form";
+import { DepositForm } from "@/components/forms/deposit-form";
 import { useAccount } from "wagmi";
-import WETHBalance from "../cards/weth-balance";
-import ETHBalance from "../cards/eth-balance";
+import WETHBalance from "@/components/cards/weth-balance";
+import ETHBalance from "@/components/cards/eth-balance";
+import Loading from "@/components/loading";
 
 export default function DepositTab() {
   const { address } = useAccount();
 
   if (!address) {
     return (
-      <div className="flex w-full items-center justify-center text-sm text-muted-foreground">
-        <Icons.spinner
-          width={24}
-          height={24}
-          className="mr-2 h-4 w-4 animate-spin"
-        />
-        Loading...
-      </div>
+
+      <Loading />
     );
   }
 

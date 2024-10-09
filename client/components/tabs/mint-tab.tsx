@@ -5,25 +5,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Icons from "@/components/icons";
-import BOBCAvailable from "../cards/bobc-available";
+import BOBCAvailable from "@/components/cards/bobc-available";
+import MintForm from "@/components/forms/mint-form";
+import Loading from "@/components/loading";
 import { useAccount } from "wagmi";
-import { MintForm } from "../forms/mint-form";
 
 export default function MintTab() {
   const { address } = useAccount();
 
   if (!address) {
-    return (
-      <div className="flex w-full items-center justify-center text-sm text-muted-foreground">
-        <Icons.spinner
-          width={24}
-          height={24}
-          className="mr-2 h-4 w-4 animate-spin"
-        />
-        Loading...
-      </div>
-    );
+    return <Loading />;
   }
 
   return (

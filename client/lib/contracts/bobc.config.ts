@@ -1,5 +1,5 @@
 export const bobcContractConfig = {
-  address: "0xA27D99594Fa54cE48F9c4cD6a6a952b645B4D27c",
+  address: "0x48Eb44594f03564BD6ab6d202c5767Bf6DD27C21",
   abi: [
     {
       anonymous: false,

@@ -24,7 +24,7 @@ const FormSchema = z.object({
   amount: z.number(),
 });
 
-export function BurnForm({ address }: { address: `0x${string}` }) {
+export default function BurnForm({ address }: { address: `0x${string}` }) {
   const { data: balance } = useReadContract({
     ...bobcContractConfig,
     functionName: "balanceOf",

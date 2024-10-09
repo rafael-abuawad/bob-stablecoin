@@ -23,6 +23,5 @@ def main():
 
     engine.deposit_collateral(int(8e18), sender=owner)
 
-    bobc = engine.get_bobc_avialable(owner)
-    print(bobc)
+    bobc = int(engine.get_bobc_available(owner) * 0.4)
     engine.mint_bobc(bobc, sender=owner)

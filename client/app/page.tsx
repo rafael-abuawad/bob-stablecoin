@@ -1,9 +1,10 @@
 "use client";
+
 import BOBCBalance from "@/components/cards/bobc-balance";
 import HealthFactor from "@/components/cards/health-factor";
 import WETHDeposited from "@/components/cards/weth-deposited";
 import Footer from "@/components/footer";
-import Icons from "@/components/icons";
+import Loading from "@/components/loading";
 import NavTabs from "@/components/nav-tabs";
 import NoWallet from "@/components/no-wallet";
 import {
@@ -31,16 +32,9 @@ export default function Home() {
   }
 
   if (!address) {
-    return (
-      <div className="flex w-full items-center justify-center text-sm text-muted-foreground">
-        <Icons.spinner
-          width={24}
-          height={24}
-          className="mr-2 h-4 w-4 animate-spin"
-        />
-        Loading...
-      </div>
-    );
+    return 
+      <Loading />
+    ;
   }
 
   return (

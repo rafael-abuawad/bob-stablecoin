@@ -5,25 +5,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Icons from "@/components/icons";
 import { useAccount } from "wagmi";
-import BOBCBalance from "../cards/bobc-balance";
-import { BurnForm } from "../forms/burn-form";
+import BOBCBalance from "@/components/cards/bobc-balance";
+import BurnForm from "@/components/forms/burn-form";
+import Loading from "@/components/loading";
 
 export default function BurnTab() {
   const { address } = useAccount();
 
   if (!address) {
-    return (
-      <div className="flex w-full items-center justify-center text-sm text-muted-foreground">
-        <Icons.spinner
-          width={24}
-          height={24}
-          className="mr-2 h-4 w-4 animate-spin"
-        />
-        Loading...
-      </div>
-    );
+    return 
+      <Loading />
+    ;
   }
 
   return (

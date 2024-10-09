@@ -24,7 +24,7 @@ const FormSchema = z.object({
   amount: z.number(),
 });
 
-export function WithdrawForm({ address }: { address: `0x${string}` }) {
+export default function WithdrawForm({ address }: { address: `0x${string}` }) {
   const { data: balance } = useReadContract({
     ...engineContractConfig,
     functionName: "collateralDeposited",

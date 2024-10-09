@@ -18,6 +18,23 @@ export default function HealthFactor({ address }: { address: `0x${string}` }) {
   });
   const [isPerfect, setIsPerfect] = useState(false);
 
+  const getColor = (value: bigint | number | undefined) => {
+    if (value === undefined) {
+      value = 10000000000000000000000;
+    }
+    value = Number(value);
+    if (value <= 1) {
+      return `rgb(255, 38, 38)`;
+    } else if (value >= 2) {
+      return `rgb(22, 163, 74`;
+    } else {
+      const ratio = value - 1;
+      const red = Math.round(255 * (1 - ratio));
+      const green = Math.round(255 * ratio);
+      return `rgb(${red}, ${green}, 60)`;
+    }
+  };
+
   useEffect(() => {
     if (
       healthFactor?.toString() ===
@@ -31,7 +48,10 @@ export default function HealthFactor({ address }: { address: `0x${string}` }) {
     <Card className="w-full">
       <CardHeader className="space-y-0">
         <CardDescription>Health Factor</CardDescription>
-        <CardTitle className="text-4xl tabular-nums text-green-500">
+        <CardTitle
+          className="text-4xl tabular-nums"
+          style={{ color: getColor(healthFactor) }}
+        >
           {!isPerfect && formatNumber(healthFactor)}
           {isPerfect && "∞"}
         </CardTitle>

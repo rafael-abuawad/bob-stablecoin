@@ -5,25 +5,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Icons from "../icons";
-import { WithdrawForm } from "../forms/withdraw-form";
-import WETHDeposited from "../cards/weth-deposited";
+import WithdrawForm from "@/components/forms/withdraw-form";
+import WETHDeposited from "@/components/cards/weth-deposited";
+import Loading from "@/components/loading";
 import { useAccount } from "wagmi";
 
 export default function WithdrawTab() {
   const { address } = useAccount();
 
   if (!address) {
-    return (
-      <div className="flex w-full items-center justify-center text-sm text-muted-foreground">
-        <Icons.spinner
-          width={24}
-          height={24}
-          className="mr-2 h-4 w-4 animate-spin"
-        />
-        Loading...
-      </div>
-    );
+    return <Loading />;
   }
 
   return (

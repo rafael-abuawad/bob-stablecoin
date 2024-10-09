@@ -1,5 +1,5 @@
 export const engineContractConfig = {
-  address: "0x11abc7396d224E49746E4b4D2987E29BE8a6964A",
+  address: "0xD61ada8165B72CeA6c01b0247036903abb095563",
   abi: [
     {
       anonymous: false,
@@ -129,7 +129,7 @@ export const engineContractConfig = {
           type: "address",
         },
       ],
-      name: "get_bobc_avialable",
+      name: "get_bobc_available",
       outputs: [
         {
           name: "",
