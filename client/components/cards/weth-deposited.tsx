@@ -5,9 +5,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Icons from "@/components/icons";
+import Loading from "@/components/loading";
 import { useReadContract } from "wagmi";
 import { formatNumber } from "@/lib/utils";
 import { engineContractConfig } from "@/lib/contracts/engine.config";
+import { ReadContractErrorType } from "viem";
 
 export default function WETHDeposited({
   description,
@@ -16,11 +18,40 @@ export default function WETHDeposited({
   description: string;
   address: `0x${string}`;
 }) {
-  const { data: balance } = useReadContract({
+  const {
+    data: balance,
+    isPending,
+    error,
+  } = useReadContract({
     ...engineContractConfig,
     functionName: "collateralDeposited",
     args: [address],
   });
+
+  if (isPending) {
+    return (
+      <Card className="w-full">
+        <CardHeader className="space-y-0 flex flex-col justify-center">
+          <CardDescription>
+            <Loading />
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="w-full">
+        <CardHeader className="space-y-0 flex flex-col justify-center text-center">
+          <CardTitle>🚨 Error</CardTitle>
+          <CardDescription>
+            {(error as ReadContractErrorType).shortMessage || error.message}
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full">

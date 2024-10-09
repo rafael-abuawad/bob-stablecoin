@@ -5,13 +5,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Loading from "@/components/loading";
 import { useReadContract } from "wagmi";
 import { engineContractConfig } from "@/lib/contracts/engine.config";
 import { formatNumber } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { ReadContractErrorType } from "viem";
 
 export default function HealthFactor({ address }: { address: `0x${string}` }) {
-  const { data: healthFactor } = useReadContract({
+  const {
+    data: healthFactor,
+    isPending,
+    error,
+  } = useReadContract({
     ...engineContractConfig,
     functionName: "health_factor",
     args: [address],
@@ -43,6 +49,31 @@ export default function HealthFactor({ address }: { address: `0x${string}` }) {
       setIsPerfect(true);
     }
   }, [healthFactor]);
+
+  if (isPending) {
+    return (
+      <Card className="w-full">
+        <CardHeader className="space-y-0 flex flex-col justify-center">
+          <CardDescription>
+            <Loading />
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="w-full">
+        <CardHeader className="space-y-0 flex flex-col justify-center text-center">
+          <CardTitle>🚨 Error</CardTitle>
+          <CardDescription>
+            {(error as ReadContractErrorType).message}
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full">

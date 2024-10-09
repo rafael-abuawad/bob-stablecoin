@@ -4,12 +4,39 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Icons from "../icons";
+import Icons from "@/components/icons";
+import Loading from "@/components/loading";
 import { useBalance } from "wagmi";
 import { formatNumber } from "@/lib/utils";
+import { GetBalanceErrorType } from "viem";
 
 export default function ETHBalance({ address }: { address: `0x${string}` }) {
-  const { data: balance } = useBalance({ address });
+  const { data: balance, isPending, error } = useBalance({ address });
+
+  if (isPending) {
+    return (
+      <Card className="w-full">
+        <CardHeader className="space-y-0 flex flex-col justify-center">
+          <CardDescription>
+            <Loading />
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="w-full">
+        <CardHeader className="space-y-0 flex flex-col justify-center text-center">
+          <CardTitle>🚨 Error</CardTitle>
+          <CardDescription>
+            {(error as GetBalanceErrorType).message}
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full">

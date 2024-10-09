@@ -15,10 +15,7 @@ export default function DepositTab() {
   const { address } = useAccount();
 
   if (!address) {
-    return (
-
-      <Loading />
-    );
+    return <Loading />;
   }
 
   return (

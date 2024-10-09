@@ -32,9 +32,8 @@ export default function Home() {
   }
 
   if (!address) {
-    return 
-      <Loading />
-    ;
+    return;
+    <Loading />;
   }
 
   return (
