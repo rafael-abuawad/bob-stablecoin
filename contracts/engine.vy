@@ -201,7 +201,16 @@ def _get_token_amount_from_bob(amount: uint256) -> uint256:
 def get_token_amount_from_bob(amount: uint256) -> uint256:
     return self._get_token_amount_from_bob(amount)
 
-    
+
+@external
+@view
+def get_bobc_available(user: address) -> uint256:
+    amount: uint256 = self.collateralDeposited[user] * 40 // 100
+    bobc: uint256 = self._get_bob_value(amount)
+    minted: uint256 = staticcall _STABLECOIN.balanceOf(user)
+    return bobc - minted
+
+
 @internal
 @view
 def _get_account_collateral_value(user: address) -> uint256:

@@ -6,25 +6,29 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Icons from "@/components/icons";
-import { DepositForm } from "@/components/forms/deposit-form";
+import BOBCAvailable from "../cards/bobc-available";
+import { useAccount } from "wagmi";
+import { MintForm } from "../forms/mint-form";
 
 export default function MintTab() {
+  const { address } = useAccount();
+
+  if (!address) {
+    return (
+      <div className="flex w-full items-center justify-center text-sm text-muted-foreground">
+        <Icons.spinner
+          width={24}
+          height={24}
+          className="mr-2 h-4 w-4 animate-spin"
+        />
+        Loading...
+      </div>
+    );
+  }
+
   return (
     <div className="grid gap-2 grid-cols-1">
-      <Card className="w-full">
-        <CardHeader className="space-y-0">
-          <CardDescription>Available to mint</CardDescription>
-          <CardTitle className="text-4xl tabular-nums">
-            12,584{" "}
-            <div className="flex flex-row space-x-2 items-center">
-              <Icons.bs width={25} height={25} />
-              <span className="font-sans text-sm font-normal tracking-normal text-muted-foreground">
-                BOBC
-              </span>
-            </div>
-          </CardTitle>
-        </CardHeader>
-      </Card>
+      <BOBCAvailable address={address} />
       <Card>
         <CardHeader>
           <CardTitle>Mint</CardTitle>
@@ -33,7 +37,7 @@ export default function MintTab() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
-          <DepositForm />
+          <MintForm address={address} />
         </CardContent>
       </Card>
     </div>

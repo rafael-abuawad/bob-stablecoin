@@ -1,14 +1,14 @@
 "use client";
 
 import { WagmiProvider, createConfig } from "wagmi";
-import { base } from "wagmi/chains";
+import { anvil } from "wagmi/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 
 const config = createConfig(
   getDefaultConfig({
     ssr: true,
-    chains: [base],
+    chains: [anvil],
     walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
     appName: "BOB Stablecoin",
     appDescription:

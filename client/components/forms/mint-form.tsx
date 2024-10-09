@@ -16,18 +16,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { formatNumber } from "@/lib/utils";
 import { useReadContract } from "wagmi";
-import { wethContractConfig } from "@/lib/contracts/weth.config";
+import { formatNumber } from "@/lib/utils";
+import { engineContractConfig } from "@/lib/contracts/engine.config";
 
 const FormSchema = z.object({
   amount: z.number(),
 });
 
-export function DepositForm({ address }: { address: `0x${string}` }) {
-  const { data: balance } = useReadContract({
-    ...wethContractConfig,
-    functionName: "balanceOf",
+export function MintForm({ address }: { address: `0x${string}` }) {
+  const { data: available } = useReadContract({
+    ...engineContractConfig,
+    functionName: "get_bobc_avialable",
     args: [address],
   });
 
@@ -61,10 +61,10 @@ export function DepositForm({ address }: { address: `0x${string}` }) {
               <FormControl>
                 <Input type="number" placeholder="0" {...field} />
               </FormControl>
-              {balance && balance.toString() !== "0" && (
+              {available && available.toString() !== "0" && (
                 <FormDescription>
                   <Button className="p-0 text-xs" variant="link">
-                    Max. ({formatNumber(balance)} WETH)
+                    Max. ({formatNumber(available)} WETH)
                   </Button>
                 </FormDescription>
               )}
@@ -72,7 +72,7 @@ export function DepositForm({ address }: { address: `0x${string}` }) {
             </FormItem>
           )}
         />
-        <Button type="submit">Deposit</Button>
+        <Button type="submit">Burn</Button>
       </form>
     </Form>
   );

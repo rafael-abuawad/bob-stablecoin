@@ -16,17 +16,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { formatNumber } from "@/lib/utils";
 import { useReadContract } from "wagmi";
-import { wethContractConfig } from "@/lib/contracts/weth.config";
+import { formatNumber } from "@/lib/utils";
+import { bobcContractConfig } from "@/lib/contracts/bobc.config";
 
 const FormSchema = z.object({
   amount: z.number(),
 });
 
-export function DepositForm({ address }: { address: `0x${string}` }) {
+export function BurnForm({ address }: { address: `0x${string}` }) {
   const { data: balance } = useReadContract({
-    ...wethContractConfig,
+    ...bobcContractConfig,
     functionName: "balanceOf",
     args: [address],
   });
@@ -72,7 +72,7 @@ export function DepositForm({ address }: { address: `0x${string}` }) {
             </FormItem>
           )}
         />
-        <Button type="submit">Deposit</Button>
+        <Button type="submit">Burn</Button>
       </form>
     </Form>
   );

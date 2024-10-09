@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Web3Provider } from "@/components/web3-provider";
+import AnnouncementBanner from "@/components/announcement-banner";
+import Navbar from "@/components/navbar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -38,6 +40,8 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <AnnouncementBanner />
+            <Navbar />
             {children}
           </ThemeProvider>
         </Web3Provider>

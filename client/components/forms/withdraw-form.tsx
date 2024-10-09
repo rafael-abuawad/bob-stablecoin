@@ -16,12 +16,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useReadContract } from "wagmi";
+import { engineContractConfig } from "@/lib/contracts/engine.config";
+import { formatNumber } from "@/lib/utils";
 
 const FormSchema = z.object({
   amount: z.number(),
 });
 
-export function WithdrawForm() {
+export function WithdrawForm({ address }: { address: `0x${string}` }) {
+  const { data: balance } = useReadContract({
+    ...engineContractConfig,
+    functionName: "collateralDeposited",
+    args: [address],
+  });
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -52,11 +61,13 @@ export function WithdrawForm() {
               <FormControl>
                 <Input type="number" placeholder="0" {...field} />
               </FormControl>
-              <FormDescription>
-                <Button className="p-0 text-xs" variant="link">
-                  Max. (1,222 ETH)
-                </Button>
-              </FormDescription>
+              {balance && balance.toString() !== "0" && (
+                <FormDescription>
+                  <Button className="p-0 text-xs" variant="link">
+                    Max. ({formatNumber(balance)} WETH)
+                  </Button>
+                </FormDescription>
+              )}
               <FormMessage />
             </FormItem>
           )}
