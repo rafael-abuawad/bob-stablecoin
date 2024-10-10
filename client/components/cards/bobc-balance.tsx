@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/card";
 import Icons from "@/components/icons";
 import Loading from "@/components/loading";
-import { bobcContractConfig } from "@/lib/contracts/bobc.config";
+import { bobcAddress, tokenContractConfig } from "@/lib/contracts/token.config";
 import { useReadContract } from "wagmi";
 import { formatNumber } from "@/lib/utils";
 import { ReadContractErrorType } from "viem";
@@ -17,7 +17,8 @@ export default function BOBCBalance({ address }: { address: `0x${string}` }) {
     isPending,
     error,
   } = useReadContract({
-    ...bobcContractConfig,
+    ...tokenContractConfig,
+    address: bobcAddress,
     functionName: "balanceOf",
     args: [address],
   });

@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useReadContract } from "wagmi";
 import { formatNumber } from "@/lib/utils";
-import { bobcContractConfig } from "@/lib/contracts/bobc.config";
+import { bobcAddress, tokenContractConfig } from "@/lib/contracts/token.config";
 
 const FormSchema = z.object({
   amount: z.number(),
@@ -26,7 +26,8 @@ const FormSchema = z.object({
 
 export default function BurnForm({ address }: { address: `0x${string}` }) {
   const { data: balance } = useReadContract({
-    ...bobcContractConfig,
+    ...tokenContractConfig,
+    address: bobcAddress,
     functionName: "balanceOf",
     args: [address],
   });
@@ -64,7 +65,7 @@ export default function BurnForm({ address }: { address: `0x${string}` }) {
               {balance && balance.toString() !== "0" && (
                 <FormDescription>
                   <Button className="p-0 text-xs" variant="link">
-                    Max. ({formatNumber(balance)} WETH)
+                    Max. ({formatNumber(balance)} BOBC)
                   </Button>
                 </FormDescription>
               )}

@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Web3Provider } from "@/components/web3-provider";
 import AnnouncementBanner from "@/components/announcement-banner";
 import Navbar from "@/components/navbar";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -43,6 +44,7 @@ export default function RootLayout({
             <AnnouncementBanner />
             <Navbar />
             {children}
+            <Toaster />
           </ThemeProvider>
         </Web3Provider>
       </body>

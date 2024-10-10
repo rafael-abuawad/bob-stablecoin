@@ -6,10 +6,10 @@ import {
 } from "@/components/ui/card";
 import Loading from "@/components/loading";
 import Icons from "@/components/icons";
-import { wethContractConfig } from "@/lib/contracts/weth.config";
 import { useReadContract } from "wagmi";
 import { formatNumber } from "@/lib/utils";
 import { ReadContractErrorType } from "viem";
+import { tokenContractConfig, wethAddress } from "@/lib/contracts/token.config";
 
 export default function WETHBalance({ address }: { address: `0x${string}` }) {
   const {
@@ -17,7 +17,8 @@ export default function WETHBalance({ address }: { address: `0x${string}` }) {
     isPending,
     error,
   } = useReadContract({
-    ...wethContractConfig,
+    ...tokenContractConfig,
+    address: wethAddress,
     functionName: "balanceOf",
     args: [address],
   });

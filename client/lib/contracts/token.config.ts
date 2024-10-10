@@ -1,5 +1,9 @@
-export const bobcContractConfig = {
-  address: "0x48Eb44594f03564BD6ab6d202c5767Bf6DD27C21",
+export const bobcAddress: `0x${string}` =
+  "0x948B3c65b89DF0B4894ABE91E6D02FE579834F8F";
+export const wethAddress: `0x${string}` =
+  "0x71C95911E9a5D330f4D621842EC243EE1343292e";
+
+export const tokenContractConfig = {
   abi: [
     {
       anonymous: false,
@@ -482,7 +486,28 @@ export const bobcContractConfig = {
       type: "function",
     },
     {
-      inputs: [],
+      inputs: [
+        {
+          name: "name_",
+          type: "string",
+        },
+        {
+          name: "symbol_",
+          type: "string",
+        },
+        {
+          name: "decimals_",
+          type: "uint8",
+        },
+        {
+          name: "name_eip712_",
+          type: "string",
+        },
+        {
+          name: "version_eip712_",
+          type: "string",
+        },
+      ],
       stateMutability: "payable",
       type: "constructor",
     },

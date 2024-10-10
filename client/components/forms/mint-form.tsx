@@ -64,7 +64,7 @@ export default function MintForm({ address }: { address: `0x${string}` }) {
               {available && available.toString() !== "0" && (
                 <FormDescription>
                   <Button className="p-0 text-xs" variant="link">
-                    Max. ({formatNumber(available)} WETH)
+                    Max. ({formatNumber(available)} BOBC)
                   </Button>
                 </FormDescription>
               )}
