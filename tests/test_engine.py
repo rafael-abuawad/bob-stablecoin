@@ -16,21 +16,21 @@ def test_oracle_get_value(engine):
     ) == 1  # should aprox. 1
 
 
-def test_mock_weth_deposits(accounts, asset):
+def test_mock_weth_deposits(accounts, owner, asset):
     amount = int(1.5e18)
     for account in accounts:
         initial_balance = asset.balanceOf(account)
-        asset.deposit(sender=account, value=amount)
+        asset.mint(account, amount, sender=owner)
         assert asset.balanceOf(account) == initial_balance + amount
 
 
-def test_deposit_collateral(accounts, asset, engine):
+def test_deposit_collateral(accounts, owner, asset, engine):
     initial_balance = asset.balanceOf(engine)
     assert initial_balance == 0
 
     amount = int(1.5e18)
     for account in accounts:
-        asset.deposit(sender=account, value=amount)
+        asset.mint(account, amount, sender=owner)
         asset.approve(engine, amount, sender=account)
         engine.deposit_collateral(amount, sender=account)
 
@@ -39,14 +39,14 @@ def test_deposit_collateral(accounts, asset, engine):
     assert final_balance == expected_final_balanace
 
 
-def test_deposit_collateral_and_mint_bobc(accounts, asset, stablecoin, engine):
+def test_deposit_collateral_and_mint_bobc(accounts, owner, asset, stablecoin, engine):
     amount = int(1.5e18)
     collateral = engine.get_bob_value(amount)
     accesible_collateral = int(collateral * 0.45)  # 45% collateral minted
     breaks_health_factor = int(collateral * 0.06)  # 51% collateral minted (breaks)
 
     for account in accounts:
-        asset.deposit(sender=account, value=amount)
+        asset.mint(account, amount, sender=owner)
         asset.approve(engine, amount, sender=account)
         engine.deposit_collateral(amount, sender=account)
 
@@ -64,7 +64,7 @@ def test_deposit_collateral_and_mint_bobc(accounts, asset, stablecoin, engine):
             engine.mint_bobc(breaks_health_factor, sender=account)
 
 
-def test_collateral_deposit_and_mint(accounts, asset, stablecoin, engine):
+def test_collateral_deposit_and_mint(accounts, owner, asset, stablecoin, engine):
     amount_to_deposit = int(1e18)  # Deposit 1 ether worth of collateral
     amount_to_mint = int(10e18)  # Mint 10 stablecoin
 
@@ -73,7 +73,7 @@ def test_collateral_deposit_and_mint(accounts, asset, stablecoin, engine):
         initial_balance = asset.balanceOf(engine)
 
         # Deposit collateral
-        asset.deposit(sender=account, value=amount_to_deposit)
+        asset.mint(account, amount_to_deposit, sender=owner)
         asset.approve(engine, amount_to_deposit, sender=account)
         engine.deposit_collateral(amount_to_deposit, sender=account)
 
@@ -89,13 +89,13 @@ def test_collateral_deposit_and_mint(accounts, asset, stablecoin, engine):
         assert health_factor >= 1
 
 
-def test_remove_collateral(accounts, asset, stablecoin, engine):
+def test_remove_collateral(accounts, owner, asset, stablecoin, engine):
     amount = int(1.5e18)
     collateral = engine.get_bob_value(amount)
     accesible_collateral = int(collateral * 0.45)  # 45% collateral minted
 
     for account in accounts:
-        asset.deposit(sender=account, value=amount)
+        asset.mint(account, amount, sender=owner)
         asset.approve(engine, amount, sender=account)
         initial_balance = asset.balanceOf(account)
         initial_engine_balance = asset.balanceOf(engine)

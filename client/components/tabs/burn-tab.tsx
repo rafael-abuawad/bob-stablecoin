@@ -14,8 +14,7 @@ export default function BurnTab() {
   const { address } = useAccount();
 
   if (!address) {
-    return;
-    <Loading />;
+    return <Loading />;
   }
 
   return (

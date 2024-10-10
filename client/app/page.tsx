@@ -1,9 +1,9 @@
 "use client";
-
 import BOBCBalance from "@/components/cards/bobc-balance";
 import HealthFactor from "@/components/cards/health-factor";
 import WETHDeposited from "@/components/cards/weth-deposited";
 import Footer from "@/components/footer";
+import Icons from "@/components/icons";
 import Loading from "@/components/loading";
 import NavTabs from "@/components/nav-tabs";
 import NoWallet from "@/components/no-wallet";
@@ -32,8 +32,7 @@ export default function Home() {
   }
 
   if (!address) {
-    return;
-    <Loading />;
+    return <Loading />;
   }
 
   return (

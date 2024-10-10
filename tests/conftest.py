@@ -7,24 +7,27 @@ def owner(accounts):
 
 
 @pytest.fixture(scope="module")
-def asset(project):
-    # WETH on Base
-    addr = "0x4200000000000000000000000000000000000006"
-    return project.WETH.at(addr)
+def asset(project, owner):
+    return project.token.deploy(
+        "Wrapped ETH", "WETH", 18, "wrapped-eth", "0.0.1", sender=owner
+    )
 
 
 @pytest.fixture(scope="module")
-def oracle():
-    return "0x4aDC67696bA383F43DD60A9e78F2C97Fbbfc7cb1"
+def oracle(project, owner):
+    return project.mock_v3_aggregator.deploy(8, int(2000e8), sender=owner)
 
 
 @pytest.fixture(scope="module")
 def stablecoin(project, owner):
-    return project.bobc.deploy(sender=owner)
+    return project.token.deploy(
+        "Collateralized BOB", "CBOB", 18, "collateralized-bob", "0.0.1", sender=owner
+    )
 
 
 @pytest.fixture(scope="module")
 def engine(project, stablecoin, asset, oracle, owner):
     engine = project.engine.deploy(stablecoin, asset, oracle, sender=owner)
     stablecoin.set_minter(engine, True, sender=owner)
+    stablecoin.renounce_ownership(sender=owner)
     return engine

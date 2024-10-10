@@ -1,7 +1,7 @@
 # pragma version ~=0.4.0
 """
-@title `BOBC` Overcollateralized BOB stablecoin
-@custom:contract-name bobc
+@title `erc20` Module Implementation
+@custom:contract-name token
 @license GNU Affero General Public License v3.0 only
 @author rabuawad
 """
@@ -43,7 +43,7 @@ initializes: erc20[ownable := ow]
 
 
 # @dev We export all `external` functions
-# from the `erc20` module. 
+# from the `erc20` module.
 exports: erc20.__interface__
 
 
@@ -55,7 +55,7 @@ initialSupply: public(uint256)
 
 @deploy
 @payable
-def __init__():
+def __init__(name_: String[25], symbol_: String[5], decimals_: uint8, name_eip712_: String[50], version_eip712_: String[20]):
     """
     @dev To omit the opcodes for checking the `msg.value`
          in the creation-time EVM bytecode, the constructor
@@ -63,16 +63,21 @@ def __init__():
     @notice The initial supply of the token as well
             as the `owner` role will be assigned to
             the `msg.sender`.
+    @param name_ The maximum 25-character user-readable
            string name of the token.
+    @param symbol_ The maximum 5-character user-readable
            string symbol of the token.
+    @param decimals_ The 1-byte decimal places of the token.
+    @param name_eip712_ The maximum 50-character user-readable
+           string name of the signing domain, i.e. the name
+           of the dApp or protocol.
+    @param version_eip712_ The maximum 20-character current
+           main version of the signing domain. Signatures
+           from different versions are not compatible.
     """
+    # The following line assigns the `owner`
+    # to the `msg.sender`.
     ow.__init__()
-
-    name_: String[25] = "Collateralized BOB"
-    symbol_: String[5] = "BOBC"
-    decimals_: uint8 = 18
-    name_eip712_: String[50] = "collateralized-bob"
-    version_eip712_: String[20] = "v.0.01"
     erc20.__init__(name_, symbol_, decimals_, name_eip712_, version_eip712_)
 
 
