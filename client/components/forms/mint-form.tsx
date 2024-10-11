@@ -76,8 +76,9 @@ export default function MintForm({ address }: { address: `0x${string}` }) {
         description: SeeItOnExplorer(url),
       });
       refetch();
+      form.reset();
     }
-  }, [hash, isConfirmed, refetch, toast]);
+  }, [form, hash, isConfirmed, refetch, toast]);
 
   useEffect(() => {
     if (error) {

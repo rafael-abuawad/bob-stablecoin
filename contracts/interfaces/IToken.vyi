@@ -1,6 +1,6 @@
 # pragma version ~=0.4.0
 """
-@title `BOBC` Overcollateralized BOB stablecoin interface
+@title `IToken` Snekmate's ERC20 interface
 @author rabuawad
 """
 

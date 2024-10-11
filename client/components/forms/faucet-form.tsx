@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,30 +15,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import Overlay from "@/components/overlay";
-import {
-  useReadContract,
-  useWaitForTransactionReceipt,
-  useWriteContract,
-} from "wagmi";
-import { engineContractConfig } from "@/lib/contracts/engine.config";
-import { formatNumber } from "@/lib/utils";
+import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { useToast } from "@/hooks/use-toast";
 import { useEffect } from "react";
-import { formatUnits, parseUnits } from "viem";
+import Overlay from "@/components/overlay";
 import SeeItOnExplorer from "../see-it-on-explorer";
+import { faucetContractConfig } from "@/lib/contracts/faucet.config";
+import { parseUnits } from "viem";
 
 const FormSchema = z.object({
   amount: z.number(),
 });
 
-export default function WithdrawForm({ address }: { address: `0x${string}` }) {
+export default function FaucetForm({ address }: { address: `0x${string}` }) {
   const { toast } = useToast();
-
-  const { data: balance, refetch } = useReadContract({
-    ...engineContractConfig,
-    functionName: "collateralDeposited",
-    args: [address],
-  });
 
   const { data: hash, isPending, error, writeContract } = useWriteContract();
 
@@ -55,16 +44,16 @@ export default function WithdrawForm({ address }: { address: `0x${string}` }) {
     },
   });
 
-  function setMax(n: bigint | undefined) {
-    form.setValue("amount", Number(formatUnits(n ?? BigInt(0), 18)));
+  function setMax() {
+    form.setValue("amount", 10);
   }
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const amount = data.amount;
     writeContract({
-      ...engineContractConfig,
-      functionName: "redeem_collateral",
-      args: [parseUnits(String(amount), 18)],
+      ...faucetContractConfig,
+      functionName: "mint",
+      args: [address, parseUnits(String(amount), 18)],
     });
   }
 
@@ -75,10 +64,9 @@ export default function WithdrawForm({ address }: { address: `0x${string}` }) {
         title: "✅ Transaction confirmed",
         description: SeeItOnExplorer(url),
       });
-      refetch();
-      form.reset();
+      form.reset()
     }
-  }, [form, hash, isConfirmed, refetch, toast]);
+  }, [form, hash, isConfirmed, toast]);
 
   useEffect(() => {
     if (error) {
@@ -110,25 +98,22 @@ export default function WithdrawForm({ address }: { address: `0x${string}` }) {
                   {...form.register("amount", { valueAsNumber: true })}
                 />
               </FormControl>
-              {balance && balance.toString() !== "0" && (
-                <FormDescription>
-                  <Button
-                    type="button"
-                    onClick={() => setMax(balance)}
-                    className="p-0 text-xs"
-                    variant="link"
-                  >
-                    Max. ({formatNumber(balance)} WETH)
-                  </Button>
-                </FormDescription>
-              )}
+              <FormDescription>
+                <Button
+                  type="button"
+                  onClick={() => setMax()}
+                  className="p-0 text-xs"
+                  variant="link"
+                >
+                  Recommended. (10 WETH)
+                </Button>
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-
         <Button type="submit" disabled={isPending}>
-          {isPending ? "Confirming..." : "Withdraw"}
+          {isPending ? "Confirming..." : "Get fake WETH"}
         </Button>
 
         {isConfirming && <Overlay text="Waiting for confirmation..." />}

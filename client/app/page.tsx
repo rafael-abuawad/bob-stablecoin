@@ -64,7 +64,7 @@ export default function Home() {
               </Accordion>
             </div>
           </div>
-          <Separator />
+          <Separator className="hidden md:block" />
           <NavTabs />
         </div>
       </main>

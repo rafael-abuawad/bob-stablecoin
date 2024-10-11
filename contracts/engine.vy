@@ -10,8 +10,8 @@
 from ethereum.ercs import IERC20
 
 
-# @dev We import  the `IBOBC` interface
-from .interfaces import IBOBC
+# @dev We import  the `IToken` interface
+from .interfaces import IToken
 
 
 # @dev We import the `AggregatorV3` interface.
@@ -33,9 +33,9 @@ _ASSET: immutable(IERC20)
 stablecoin: public(immutable(address))
 
 
-# @dev Stores the IBOBC interface object of the underlying
+# @dev Stores the IToken interface object of the underlying
 # custom token used for the protocol
-_STABLECOIN: immutable(IBOBC)
+_STABLECOIN: immutable(IToken)
 
 
 # @dev Returns the address of the underlying oracle
@@ -129,12 +129,12 @@ exports: ow.__interface__
 
 @deploy
 @payable
-def __init__(stablecoin_: IBOBC, asset_: IERC20, oracle_: IAggregatorV3):
+def __init__(stablecoin_: IToken, asset_: IERC20, oracle_: IAggregatorV3):
     """
     @dev To omit the opcodes for checking the `msg.value`
          in the creation-time EVM bytecode, the constructor
          is declared as `payable`.
-    @param asset_ The IBOBC compatible underlying asset contract.
+    @param asset_ The IToken compatible underlying asset contract.
     @param oracle_ The address of the Chainlink Aggregator V3 oracle contract
            used to provide price feed data for the application.
     @notice The `owner` role will be assigned to

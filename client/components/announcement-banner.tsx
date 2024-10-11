@@ -19,7 +19,7 @@ export default function AnnouncementBanner() {
               className="decoration-2 underline font-medium hover:text-white/80 focus:outline-none focus:text-white/80"
               href="../figma.html"
             >
-              Base mainnet.
+              Base Sepolia.
             </a>
           </p>
         </div>

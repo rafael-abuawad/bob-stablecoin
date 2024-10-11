@@ -1,7 +1,7 @@
 export const bobcAddress: `0x${string}` =
-  "0x948B3c65b89DF0B4894ABE91E6D02FE579834F8F";
+  "0x712516e61C8B383dF4A63CFe83d7701Bce54B03e";
 export const wethAddress: `0x${string}` =
-  "0x71C95911E9a5D330f4D621842EC243EE1343292e";
+  "0x948B3c65b89DF0B4894ABE91E6D02FE579834F8F";
 
 export const tokenContractConfig = {
   abi: [

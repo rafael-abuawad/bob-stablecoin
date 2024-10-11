@@ -84,7 +84,6 @@ export default function BurnForm({ address }: { address: `0x${string}` }) {
       functionName: "approve",
       args: [engineAddress, parseUnits(String(amount), 18)],
     });
-    console.log({ error, hash });
   }
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -94,6 +93,7 @@ export default function BurnForm({ address }: { address: `0x${string}` }) {
       functionName: "burn_bobc",
       args: [parseUnits(String(amount), 18)],
     });
+    form.reset();
   }
 
   useEffect(() => {
