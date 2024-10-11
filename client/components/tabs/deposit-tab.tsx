@@ -27,7 +27,10 @@ export default function DepositTab() {
       </div>
 
       <div className="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800/30 dark:text-yellow-500">
-        ⚠ if you dont have any WETH go get some free fake WETH faucet. <Link href="/faucet" className="underline underline-offset-4">WETH Faucet</Link>
+        ⚠ if you dont have any WETH go get some free fake WETH faucet.{" "}
+        <Link href="/faucet" className="underline underline-offset-4">
+          WETH Faucet
+        </Link>
       </div>
 
       <Card>

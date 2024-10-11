@@ -64,7 +64,7 @@ export default function FaucetForm({ address }: { address: `0x${string}` }) {
         title: "✅ Transaction confirmed",
         description: SeeItOnExplorer(url),
       });
-      form.reset()
+      form.reset();
     }
   }, [form, hash, isConfirmed, toast]);
 

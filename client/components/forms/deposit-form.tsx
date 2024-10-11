@@ -93,7 +93,7 @@ export function DepositForm({ address }: { address: `0x${string}` }) {
       functionName: "deposit_collateral",
       args: [parseUnits(String(amount), 18)],
     });
-      form.reset()
+    form.reset();
   }
 
   useEffect(() => {

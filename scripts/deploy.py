@@ -9,7 +9,7 @@ def main():
         owner = accounts.test_accounts[1]
     else:
         owner = accounts.load("bobc-deployer")
-    
+
     owner.transfer("0x42c19c96AD3de77f0eE4f923a2Ab361053e0e9C4", int(0.05e18))
 
     # deployments
