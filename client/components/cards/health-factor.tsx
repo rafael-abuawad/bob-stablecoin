@@ -11,12 +11,14 @@ import { engineContractConfig } from "@/lib/contracts/engine.config";
 import { formatNumber } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { ReadContractErrorType } from "viem";
+import { SymbolIcon } from "@radix-ui/react-icons";
 
 export default function HealthFactor({ address }: { address: `0x${string}` }) {
   const {
     data: healthFactor,
     isPending,
     error,
+    refetch,
   } = useReadContract({
     ...engineContractConfig,
     functionName: "health_factor",
@@ -54,9 +56,7 @@ export default function HealthFactor({ address }: { address: `0x${string}` }) {
     return (
       <Card className="w-full">
         <CardHeader className="space-y-0 flex flex-col justify-center">
-          <CardDescription>
-            <Loading />
-          </CardDescription>
+          <Loading />
         </CardHeader>
       </Card>
     );
@@ -68,7 +68,7 @@ export default function HealthFactor({ address }: { address: `0x${string}` }) {
         <CardHeader className="space-y-0 flex flex-col justify-center text-center">
           <CardTitle>🚨 Error</CardTitle>
           <CardDescription>
-            {(error as ReadContractErrorType).message}
+            {(error as ReadContractErrorType).shortMessage}
           </CardDescription>
         </CardHeader>
       </Card>
@@ -78,7 +78,13 @@ export default function HealthFactor({ address }: { address: `0x${string}` }) {
   return (
     <Card className="w-full">
       <CardHeader className="space-y-0">
-        <CardDescription>Health Factor</CardDescription>
+        <CardDescription className="flex items-center">
+          Health Factor
+          <SymbolIcon
+            onClick={() => refetch()}
+            className="ml-1 w-3 h-3 text-muted-foreground hover:text-primary cursor-pointer"
+          />
+        </CardDescription>
         <CardTitle
           className="text-4xl tabular-nums"
           style={{ color: getColor(healthFactor) }}

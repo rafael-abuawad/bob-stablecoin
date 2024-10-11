@@ -10,6 +10,7 @@ import { useReadContract } from "wagmi";
 import { formatNumber } from "@/lib/utils";
 import { engineContractConfig } from "@/lib/contracts/engine.config";
 import { ReadContractErrorType } from "viem";
+import { SymbolIcon } from "@radix-ui/react-icons";
 
 export default function WETHDeposited({
   description,
@@ -22,6 +23,7 @@ export default function WETHDeposited({
     data: balance,
     isPending,
     error,
+    refetch,
   } = useReadContract({
     ...engineContractConfig,
     functionName: "collateralDeposited",
@@ -32,9 +34,7 @@ export default function WETHDeposited({
     return (
       <Card className="w-full">
         <CardHeader className="space-y-0 flex flex-col justify-center">
-          <CardDescription>
-            <Loading />
-          </CardDescription>
+          <Loading />
         </CardHeader>
       </Card>
     );
@@ -56,7 +56,13 @@ export default function WETHDeposited({
   return (
     <Card className="w-full">
       <CardHeader className="space-y-0">
-        <CardDescription>{description}</CardDescription>
+        <CardDescription className="flex items-center">
+          {description}
+          <SymbolIcon
+            onClick={() => refetch()}
+            className="ml-1 w-3 h-3 text-muted-foreground hover:text-primary cursor-pointer"
+          />
+        </CardDescription>
         <CardTitle className="text-4xl tabular-nums">
           {formatNumber(balance)}{" "}
           <div className={`flex flex-row space-x-2 items-center`}>

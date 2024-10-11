@@ -9,17 +9,16 @@ import Loading from "@/components/loading";
 import { useBalance } from "wagmi";
 import { formatNumber } from "@/lib/utils";
 import { GetBalanceErrorType } from "viem";
+import { SymbolIcon } from "@radix-ui/react-icons";
 
 export default function ETHBalance({ address }: { address: `0x${string}` }) {
-  const { data: balance, isPending, error } = useBalance({ address });
+  const { data: balance, isPending, error, refetch } = useBalance({ address });
 
   if (isPending) {
     return (
       <Card className="w-full">
         <CardHeader className="space-y-0 flex flex-col justify-center">
-          <CardDescription>
-            <Loading />
-          </CardDescription>
+          <Loading />
         </CardHeader>
       </Card>
     );
@@ -41,7 +40,13 @@ export default function ETHBalance({ address }: { address: `0x${string}` }) {
   return (
     <Card className="w-full">
       <CardHeader className="space-y-0">
-        <CardDescription>Balance</CardDescription>
+        <CardDescription className="flex items-center">
+          Balance
+          <SymbolIcon
+            onClick={() => refetch()}
+            className="ml-1 w-3 h-3 text-muted-foreground hover:text-primary cursor-pointer"
+          />
+        </CardDescription>
         <CardTitle className="text-4xl tabular-nums">
           {formatNumber(balance?.value)}{" "}
           <div className="flex flex-row space-x-2 items-center">

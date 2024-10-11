@@ -30,9 +30,10 @@ import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { tokenContractConfig, wethAddress } from "@/lib/contracts/token.config";
 import { formatUnits, parseUnits } from "viem";
+import SeeItOnExplorer from "../see-it-on-explorer";
 
 const FormSchema = z.object({
-  amount: z.any(),
+  amount: z.number(),
 });
 
 export function DepositForm({ address }: { address: `0x${string}` }) {
@@ -81,7 +82,7 @@ export function DepositForm({ address }: { address: `0x${string}` }) {
       ...tokenContractConfig,
       address: wethAddress,
       functionName: "approve",
-      args: [engineAddress, parseUnits(amount, 18)],
+      args: [engineAddress, parseUnits(String(amount), 18)],
     });
   }
 
@@ -90,19 +91,20 @@ export function DepositForm({ address }: { address: `0x${string}` }) {
     writeContract({
       ...engineContractConfig,
       functionName: "deposit_collateral",
-      args: [parseUnits(amount, 18)],
+      args: [parseUnits(String(amount), 18)],
     });
   }
 
   useEffect(() => {
     if (isConfirmed) {
+      const url = `https://basescan.org/tx/${hash}`;
       toast({
         title: "✅ Transaction confirmed",
-        description: "Friday, February 10, 2023 at 5:57 PM",
+        description: SeeItOnExplorer(url),
       });
       refetch();
     }
-  }, [isConfirmed, refetch, toast]);
+  }, [hash, isConfirmed, refetch, toast]);
 
   useEffect(() => {
     if (error) {
@@ -110,6 +112,7 @@ export function DepositForm({ address }: { address: `0x${string}` }) {
         title: "🚨 Error",
         description: error.message,
       });
+      console.log({ error });
     }
   }, [error, toast]);
 
@@ -118,16 +121,21 @@ export function DepositForm({ address }: { address: `0x${string}` }) {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmitAllowance)}
-          className="w-2/3 space-y-6 relative"
+          className="w-2/3 space-y-6 relative p-2"
         >
           <FormField
             control={form.control}
             name="amount"
-            render={({ field }) => (
+            render={({}) => (
               <FormItem>
                 <FormLabel>Amount</FormLabel>
                 <FormControl>
-                  <Input type="number" step={0.01} placeholder="0" {...field} />
+                  <Input
+                    type="number"
+                    step={0.01}
+                    placeholder="0"
+                    {...form.register("amount", { valueAsNumber: true })}
+                  />
                 </FormControl>
                 {balance && balance.toString() !== "0" && (
                   <FormDescription>
@@ -159,16 +167,20 @@ export function DepositForm({ address }: { address: `0x${string}` }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-2/3 space-y-6 relative"
+        className="w-2/3 space-y-6 relative p-2"
       >
         <FormField
           control={form.control}
           name="amount"
-          render={({ field }) => (
+          render={({}) => (
             <FormItem>
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="0" {...field} />
+                <Input
+                  type="number"
+                  placeholder="0"
+                  {...form.register("amount", { valueAsNumber: true })}
+                />
               </FormControl>
               {allowance && allowance.toString() !== "0" && (
                 <FormDescription>

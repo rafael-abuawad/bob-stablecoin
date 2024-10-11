@@ -10,12 +10,14 @@ import { useReadContract } from "wagmi";
 import { formatNumber } from "@/lib/utils";
 import { engineContractConfig } from "@/lib/contracts/engine.config";
 import { ReadContractErrorType } from "viem";
+import { SymbolIcon } from "@radix-ui/react-icons";
 
 export default function BOBCAvailable({ address }: { address: `0x${string}` }) {
   const {
     data: available,
     error,
     isPending,
+    refetch,
   } = useReadContract({
     ...engineContractConfig,
     functionName: "get_bobc_available",
@@ -26,9 +28,7 @@ export default function BOBCAvailable({ address }: { address: `0x${string}` }) {
     return (
       <Card className="w-full">
         <CardHeader className="space-y-0 flex flex-col justify-center">
-          <CardDescription>
-            <Loading />
-          </CardDescription>
+          <Loading />
         </CardHeader>
       </Card>
     );
@@ -50,7 +50,13 @@ export default function BOBCAvailable({ address }: { address: `0x${string}` }) {
   return (
     <Card className="w-full">
       <CardHeader className="space-y-0">
-        <CardDescription>Available to mint</CardDescription>
+        <CardDescription className="flex items-center">
+          Available to mint
+          <SymbolIcon
+            onClick={() => refetch()}
+            className="ml-1 w-3 h-3 text-muted-foreground hover:text-primary cursor-pointer"
+          />
+        </CardDescription>
         <CardTitle className="text-4xl tabular-nums">
           {formatNumber(available)}{" "}
           <div className={`flex flex-row space-x-2 items-center`}>
