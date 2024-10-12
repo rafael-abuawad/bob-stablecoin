@@ -21,10 +21,7 @@ Creating a good decentralized application involves multiple steps. The first was
 The next step was creating a good, user-friendly, and intuitive blockchain application that anyone with some basic understanding of blockchain can use, and, in my opinion, it came out perfect!
 
 ## Technologies I used
-- Vyper: To create the entire smart contract logic.
-- Apeworx: To manage deployments and tests.
-- React + Next: The webapp is built from scratch using React.
-- Wagmi: To connect the frontend with the smart contracts.
+Vyper,Apeworx, React + Next, Wagmi
 
 ## Links
 - https://github.com/rafael-abuawad/bob-stablecoin
