@@ -2,7 +2,7 @@
 BOBC
 
 ## Tagline
-Overcollateralized BOB Stablecoin baked by ETH
+Overcollateralized BOB Stablecoin backed by ETH
 
 ## Why am I participating in Based LatAm?
 I want to connect with like-minded individuals in LatAm; I believe that is very important for us as a community to connect and grow together. Participating in the hackathon was a way for me to show my skills and share my knowledge, hopefully a good presentation card for future endeavors.
@@ -21,10 +21,10 @@ Creating a good decentralized application involves multiple steps. The first was
 The next step was creating a good, user-friendly, and intuitive blockchain application that anyone with some basic understanding of blockchain can use, and, in my opinion, it came out perfect!
 
 ## Technologies I used
-Vyper: To create the entire smart contract logic.
-Apeworx: To manage deployments and tests.
-React + Next: The webapp is built from scratch using React.
-Wagmi: To connect the frontend with the smart contracts.
+- Vyper: To create the entire smart contract logic.
+- Apeworx: To manage deployments and tests.
+- React + Next: The webapp is built from scratch using React.
+- Wagmi: To connect the frontend with the smart contracts.
 
 ## Links
 - https://github.com/rafael-abuawad/bob-stablecoin
