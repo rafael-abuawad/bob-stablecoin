@@ -44,12 +44,10 @@ export default function HealthFactor({ address }: { address: `0x${string}` }) {
   };
 
   useEffect(() => {
-    if (
+    setIsPerfect(
       healthFactor?.toString() ===
-      "115792089237316195423570985008687907853269984665640564039457584007913129639935"
-    ) {
-      setIsPerfect(true);
-    }
+        "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+    );
   }, [healthFactor]);
 
   if (isPending) {

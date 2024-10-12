@@ -38,6 +38,8 @@ The system consists of two main contracts:
    - The BOBC stablecoin contract.
    - BOBC is minted when users deposit WETH as collateral.
    - There is no owner; the contract is entirely managed by the `engine.vy`.
+   - [WETH](https://sepolia.basescan.org/address/0xec915716AE8cC0359A88c24E214792f6A12c192b)
+   - [BOBC](https://sepolia.basescan.org/address/0x947eA44Bd6560476819a91F2a5DBf030C43dee26)
 
 2. **`engine.vy`**:
    - This contract is the core of the protocol.
@@ -45,6 +47,7 @@ The system consists of two main contracts:
      - Collateral deposits and withdrawals.
      - Minting and burning of BOBC.
      - Liquidations, allowing users to liquidate undercollateralized positions.
+   - [Engine](https://sepolia.basescan.org/address/0xA7e9D84133936Ab2599BB8ec5B29caa9Df4A9bD1)
 
 ## **How It Works**
 

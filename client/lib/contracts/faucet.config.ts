@@ -1,5 +1,5 @@
 export const faucetAddress: `0x${string}` =
-  "0x59F2f1fCfE2474fD5F0b9BA1E73ca90b143Eb8d0";
+  "0x2AB5d7A0009b0409A422587A6B0ff18f40a8Cec6";
 
 export const faucetContractConfig = {
   address: faucetAddress,

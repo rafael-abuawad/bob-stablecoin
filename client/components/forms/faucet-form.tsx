@@ -59,7 +59,7 @@ export default function FaucetForm({ address }: { address: `0x${string}` }) {
 
   useEffect(() => {
     if (isConfirmed) {
-      const url = `https://basescan.org/tx/${hash}`;
+      const url = `https://sepolia.basescan.org/tx/${hash}`;
       toast({
         title: "✅ Transaction confirmed",
         description: SeeItOnExplorer(url),

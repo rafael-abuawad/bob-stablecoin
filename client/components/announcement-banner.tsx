@@ -1,4 +1,5 @@
 import localFont from "next/font/local";
+import Link from "next/link";
 
 const fiftiesFont = localFont({ src: "../lib/fonts/fifties.ttf" });
 
@@ -15,12 +16,12 @@ export default function AnnouncementBanner() {
               <span className="text-xs">B$</span>BOBC
             </span>{" "}
             is live and deployed on{" "}
-            <a
+            <Link
               className="decoration-2 underline font-medium hover:text-white/80 focus:outline-none focus:text-white/80"
-              href="../figma.html"
+              href={"/deployments"}
             >
               Base Sepolia.
-            </a>
+            </Link>
           </p>
         </div>
       </div>
