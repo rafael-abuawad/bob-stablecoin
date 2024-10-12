@@ -4,6 +4,9 @@
 
 The BOBC Protocol is an overcollateralized stablecoin system pegged to the BOB currency. This decentralized protocol allows users to mint BOBC stablecoins by depositing WETH as collateral. The protocol ensures that the system is always at least 200% overcollateralized, guaranteeing the stability of BOBC. It uses **Chainlink** data feeds for USD pricing, though the protocol maintains a fixed exchange rate between USD and BOB.
 
+- [Video presentation](https://youtu.be/TTNQ3m35QOs)
+- [Live Demo](https://bob-stablecoin-kj68.vercel.app/)
+
 ## **Table of Contents**
 - [Introduction](#introduction)
 - [Key Features](#key-features)
